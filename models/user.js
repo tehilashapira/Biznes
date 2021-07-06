@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema({
 
 
     deals: [{ type: mongoose.Schema.Types.ObjectId, ref: 'deal' }],
+    investments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Investment'}]
 })
 
 module.exports = mongoose.model('User', userSchema)

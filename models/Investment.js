@@ -4,13 +4,13 @@ const InvestmentSchema = mongoose.Schema({
 
     investmentName://name of hashkaa
     {
-        type: string
+        type: String
     },
     description://desc
     {
-        type: string
+        type: String
     },
-    createInvestment: //created date of hashkaa
+    dateCreateInvestment: //created date of hashkaa
     {
         type: Date,
         default: Date.now
@@ -23,10 +23,16 @@ const InvestmentSchema = mongoose.Schema({
     },
     owner://person created hashkaa??idUser
     {
-        type: string
+        type: String
     },
     deals://all deals for hashkaa
-     [{ type: mongoose.Schema.Types.ObjectId, ref: 'Deal' }]
+     [{ type: mongoose.Schema.Types.ObjectId, ref: 'Deal' }],
+
+     userId:{//person created hashka
+         type: mongoose.Schema.Types.ObjectId, ref: 'User'
+     },
+    recruimentId://id of details hashkaa
+    { type: mongoose.Schema.Types.ObjectId, ref: 'Recruitment' }
 
 })
 
