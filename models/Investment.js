@@ -12,15 +12,19 @@ const InvestmentSchema = mongoose.Schema({
     },
     dateCreateInvestment: //created date of hashkaa
     {
-        type: Date,
-        default: Date.now
+        type: String,
+        // type: Date,
+        default: Date.now(),
+        
     },
 
     dateEnd://date end of hashkaa
 
     {
-        type: Date
+        type: String,
     },
+    img:{ type: String}
+    ,
     owner://person created hashkaa??idUser
     {
         type: String

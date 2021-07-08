@@ -2,15 +2,15 @@ const Repository = require("../repository/repository")
 const Investment =require("../models/Investment")
 const Recruitment=require("../models/InvestmentDetails")
 
-const createInvestment=async(investmentName,description,dateCreateInvestment,dateEnd,RecruitmentTarget,ShareValue)=>{
+const createInvestment=async(investmentName,description,dateCreateInvestment,dateEnd,RecruitmentTarget,ShareValue,img)=>{
     console.log("create in services!!");
     return new Promise(async (resolve, reject) => {
     try {
-        const newInvestment = await Repository.createOne(Investment,{investmentName:investmentName,description:description,dateCreateInvestment:dateCreateInvestment,dateEnd:dateEnd})
+        const newInvestment = await Repository.createOne(Investment,{investmentName:investmentName,description:description,dateCreateInvestment:dateCreateInvestment,dateEnd:dateEnd,img:img})
         const newRecruitment = await Repository.createOne(Recruitment,{RecruitmentTarget:RecruitmentTarget,ShareValue:ShareValue,investmentId:newInvestment._id})     
         newInvestment.recruimentId=newRecruitment._id
         newInvestment.save()
-        resolve(newRecruitment)
+        resolve({newInvestment,newRecruitment})
         console.log(newRecruitment);
     } catch (error) {
        reject(error.message)
@@ -28,6 +28,36 @@ const createInvestment=async(investmentName,description,dateCreateInvestment,dat
     // }).catch(err => {
     //     res.status(400).send("not access to save investment")
     // })
+}
+const getAllInvestments = async () => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            console.log("get all investments service")
+            const investments = await Repository.find(Investment)
+            const recruitments=await Repository.find(Recruitment)
+            console.log("data", investments);
+            resolve({investment:investments, recruitment:recruitments})
+        } catch (error) {
+            console.log("error", error);
+            reject(error)
+        }
+    })
+}
+const deleteInvestmentByAdmin=async(investmentId)=>{
+    console.log("delete from service");
+    return new Promise(async (resolve, reject) => {
+        try {
+            const currentInvestment = await Repository.findByIdAndRemove(Investment,investmentId)
+            const currentRecruitment = await Repository.findOne(Recruitment,{investmentId:currentInvestment._id})   
+            await Repository.findByIdAndRemove(Recruitment,currentRecruitment._id)  
+            // newInvestment.recruimentId=newRecruitment._id
+            // newInvestment.save()
+            resolve({currentInvestment,currentRecruitment})
+            console.log(currentInvestment,currentRecruitment);
+        } catch (error) {
+           reject(error.message)
+        }
+    })
 }
 
 const addRecommendations = (recommendationUser, businessId, userId) => {
@@ -91,5 +121,5 @@ const deleteRecommendation = (recommendationId) => {
 
 
 module.exports = {
-    createInvestment,  addRecommendations, getRecommendationByBusiness, deleteRecommendation
+    createInvestment,deleteInvestmentByAdmin, getAllInvestments, addRecommendations, getRecommendationByBusiness, deleteRecommendation
 }
