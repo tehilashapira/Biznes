@@ -3,33 +3,35 @@ import { actions } from '../actions/action';
 import { createReducer } from "./reducerUtils";
 
 const initialState = {
-    investment:{}
-        // investmentName="",
-        // description="",
-        // dateCreateInvestment="",
-        // dateEnd="",
-        // recruitmentTarget="",
-        // shareValue=""
+    investment: []
+    // investmentName="",
+    // description="",
+    // dateCreateInvestment="",
+    // dateEnd="",
+    // recruitmentTarget="",
+    // shareValue=""
     ,
-    recruitment:{}
-        // recruitmentTarget="",
-        // shareValue=""
-    
+    recruitment: []
+    // recruitmentTarget="",
+    // shareValue=""
+
 }
 
 
-const investmentData={
+const investmentData = {
 
-    setInvestment(state,action){
+
+    setInvestment(state, action) {
         debugger
-        state.investment=action.payload.investment
-        state.recruitment=action.payload.details
+        // state.investment.push(action.payload.investment)
+        // state.recruitment.push(action.payload.details)
+        alert("add investment " + JSON.stringify(action.payload.investment))
     },
-    getAllInvestmet(state,action){
+    getAllInvestmet(state, action) {
         debugger
-        state.investment=action.payload.investment
-        state.recruitment=action.payload.recruitment
-        console.log("investment"+ state.investment)
+        state.investment = action.payload.investment
+        state.recruitment = action.payload.recruitment
+        console.log("investment" + state.investment)
     }
 }
 

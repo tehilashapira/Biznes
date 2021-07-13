@@ -1,13 +1,15 @@
 import React, { useRef } from 'react'
 import Form from 'react-bootstrap/Form'
-import { actions } from '../redux/actions/action'
 import { useSelector, useDispatch } from 'react-redux'
-import { Link } from 'react-router-dom'
 import { Button } from 'react-bootstrap'
+import { useParams } from 'react-router-dom'
+import { actions } from '../redux/actions/action'
+import {history,withRouter} from 'react-router-dom'
 
+export default withRouter( function EditInvestment(props){
 
+    const {history}=props
 
-export default function CreateInvestment() {
     const investmentName = useRef('')
     const description = useRef('')
     const dateCreateInvestment = useRef('')
@@ -15,29 +17,37 @@ export default function CreateInvestment() {
     const recruitmentTarget = useRef('')
     const shareValue = useRef('')
 
+    const investment = useSelector(state => state.reducerInvestment.investment)
+    const recruitment = useSelector(state => state.reducerInvestment.recruitment)
     const dispatch = useDispatch()
-    // const investments=useSelector(state=>state.reducerInvestment.investment)   
-    function createInvestment() {
-        dispatch(actions.createInvestment({
+
+    const {investmentId}=useParams()
+    const currentInvestment=investment[investment.indexOf(investment.find(i=>i["_id"]==investmentId))]
+    const currentRecruitment=recruitment[recruitment.indexOf(recruitment.find(i=>i["investmentId"]==investmentId))]
+
+    function editInvestment(){
+        dispatch(actions.editInvestment({
+            investmentId:investmentId,
             investmentName: investmentName.current.value,
             description: description.current.value,
             dateCreateInvestment: dateCreateInvestment.current.value,
             dateEnd: dateEnd.current.value,
+            recruitmentId:currentRecruitment._id,
             recruitmentTarget: recruitmentTarget.current.value,
             shareValue: shareValue.current.value
         }))
-    }
-
-    function uploadImage(){
-        dispatch(actions.uploadImage())
+        history.push('/getAllInvestments')
     }
 
 
-    return (
+    return(
         <>
+            <div>
+                {console.log("investid",investmentId),console.log("recid",currentRecruitment._id)}
+            </div>
             <div className="container-fluid">
                 <div className="row d-flex justify-content-center">
-                    <h1 className="font-weight-bold text-success">Create Investment</h1>
+                    <h1 className="font-weight-bold text-success">Edit Investment</h1>
                 </div>
                 <div className="row">
 
@@ -48,42 +58,36 @@ export default function CreateInvestment() {
                         <Form>
                             <Form.Group >
                                 <Form.Label>Name of Investment</Form.Label>
-                                <Form.Control type="text" placeholder="Enter name" ref={investmentName} />
+                                <Form.Control type="text" defaultValue={currentInvestment.investmentName} ref={investmentName} />
                             </Form.Group>
                             <Form.Group >
                                 <Form.Label>Description</Form.Label>
-                                <Form.Control type="text" placeholder="Description" ref={description} />
+                                <Form.Control type="text" defaultValue={currentInvestment.description} ref={description} />
                             </Form.Group>
                             <Form.Group >
                                 <Form.Label>Date Create Investment</Form.Label>
-                                <Form.Control type="date" placeholder="dateCreateInvestment" ref={dateCreateInvestment} />
+                                <Form.Control type="date" defaultValue={currentInvestment.dateCreateInvestment} ref={dateCreateInvestment} />
                             </Form.Group>
                             <Form.Group >
                                 <Form.Label>Date End</Form.Label>
-                                <Form.Control type="date" placeholder="dateEnd" ref={dateEnd} />
+                                <Form.Control type="date" defaultValue={currentInvestment.dateEnd} ref={dateEnd} />
                             </Form.Group>
                             <Form.Group >
                                 <Form.Label>Recruitment Target</Form.Label>
-                                <Form.Control type="text" placeholder="RecruitmentTarget" ref={recruitmentTarget} />
+                                <Form.Control type="text" defaultValue={currentRecruitment.recruitmentTarget} ref={recruitmentTarget} />
                             </Form.Group>
                             <Form.Group >
                                 <Form.Label>Share Value</Form.Label>
-                                <Form.Control type="text" placeholder="ShareValue" ref={shareValue} />
+                                <Form.Control type="text" defaultValue={currentRecruitment.shareValue} ref={shareValue} />
                             </Form.Group>
-                            <Button onClick={uploadImage}>
+                            <Button>
                                 upload image
                             </Button>
                         </Form>
-                        <div className="p-4">
-                            <button className="btn btn-outline-success" onClick={createInvestment}> SAVE </button>&nbsp;&nbsp;
-                            <Link to='/getAllInvestments'>
-                                <button className="btn btn-outline-success">Back To All Investments</button>
-                            </Link>
-                        </div>
+                            <button className="btn btn-outline-success m-3" onClick={editInvestment}> SAVE CHANGES </button>&nbsp;&nbsp;
                     </div>
                 </div>
-               
             </div>
         </>
     )
-}
+})
